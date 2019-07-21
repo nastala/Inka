@@ -1,0 +1,292 @@
+﻿@using Inka.Models
+@model Inka.Models.User
+
+@{
+    ViewBag.Title = "Basvuru";
+}
+
+<h2>Basvuru</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.NationID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("NationID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.NationID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdentityNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IdentityNumber, new { htmlAttributes = new { @maxlength = "11", @type = "number", @class = "form-control", @onkeydown = "test()" } })
+                @Html.ValidationMessageFor(model => model.IdentityNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Gender, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TelephoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TelephoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TelephoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CityID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CityID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DistrictID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("DistrictID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LicenceID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("LicenceID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Licence, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EducationLevelID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("EducationLevelID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EducationLevel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Height, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Heights", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Height, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Weight, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Weights", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Size, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Sizes", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Size, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ShoeSize, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ShoeSizes", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ShoeSize, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div style="border:1px solid #000000; padding-left:4px;">
+            <h4 style="text-align: center;">Yabancı Dil Bilgisi</h4>
+            <table class="table" id="foreignLanguagesTable" border="1" style="table-layout: fixed;">
+                <tr>
+                    <th>Dil</th>
+                    <th>Okuma</th>
+                    <th>Yazma</th>
+                    <th>Konuşma</th>
+                </tr>
+            </table>
+
+            <label class="btn btn-danger" id="btnForeignLanguage" data-toggle="modal" data-target="#flModal">Yeni Dil Ekle</label>
+        </div>
+    </div>
+
+    <div class="modal fade" id="flModal" tabindex="-1" role="dialog" aria-labelledby="">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Dil Bilgileri</h4>
+                </div>
+                <form>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Dil</label>
+                        <div class="col-md-10">
+                            <select id="flModalLanguages" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Okuma</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("LanguageLevels", null, htmlAttributes: new { @id = "flModalReading", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Yazma</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("LanguageLevels", null, htmlAttributes: new { @id = "flModalWriting", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Konuşma</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("LanguageLevels", null, htmlAttributes: new { @id = "flModalSpeaking", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                        <label id="btnAddForeignLanguage" class="btn btn-danger" data-dismiss="modal">Kaydet</label>
+                        <label class="btn btn-danger">Sil</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        function flRowClick(row) {
+            console.log("flRowClick");
+            console.log($(this));
+            getLanguages(row.cells);
+        }
+
+        function fillFlModalLanguages(languages, selected = undefined) {
+            console.log("fillFlModalLanguages");
+            $("#flModalLanguages").find('option').remove();
+
+            for (let i = 0; i < languages.length; i++) {
+                const data = languages[i];
+                $("#flModalLanguages").append(`<option value="${data.ID}">${data.Name}</option>`);
+            }
+
+            if (selected != undefined) {
+                $("#flModalLanguages").val(selected.Language);
+                $("#flModalReading").val(selected.Reading);
+                $("#flModalWriting").val(selected.Writing);
+                $("#flModalSpeaking").val(selected.Speaking);
+            }
+            
+            $("#flModal").modal("show");
+        }
+
+        function getLanguages(cells = undefined) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("ForeignLanguages", "Home")",
+                success: function (response) {
+                    let selected = undefined;
+                    if (cells != undefined) {
+                        const languageID = parseInt(cells[0].dataset.languageid);
+                        response.push({ ID: languageID, Name: cells[0].innerHTML });
+                        selected = { Language: languageID, Reading: cells[1].innerHTML, Writing: cells[2].innerHTML, Speaking: cells[3].innerHTML };
+                    }
+                    console.log("after push response:", response);
+                    fillFlModalLanguages(response, selected);
+                },
+                error: function (err) {
+                    alert("getLanguages error");
+                    console.log(err);
+                }
+            });
+        }
+
+        $("#btnForeignLanguage").click(function () {
+            console.log("btnForeignLanguage");
+            getLanguages();
+        })
+
+        $("#btnAddForeignLanguage").click(function () {
+            console.log("btnAddForeignLanguage clicked");
+
+            const languageID = $("#flModalLanguages").val();
+            const languageText = $("#flModalLanguages option:selected").text();
+            const reading = $("#flModalReading").val();
+            const writing = $("#flModalWriting").val();
+            const speaking = $("#flModalSpeaking").val();
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddForeignLanguageToSession", "Home")",
+                data: { flID: languageID, reading: reading, writing: writing, speaking: speaking },
+                success: function (response) {
+                    if (response === "error") {
+                        console.log("AddForeignLanguageToSession response returned error");
+                        return;
+                    }
+
+                    console.log("AddForeignLanguageToSession response returned success");
+                    const innerHTML = `<tr id="row${languageID}" onclick="flRowClick(this)"><td data-languageid="${languageID}">${languageText}</td > <td>${reading}</td> <td>${writing}</td> <td>${speaking}</td></tr>`;
+                    const row = $(`#row${languageID}`);
+                    console.log(row.length);
+                    if (row.length > 0) {
+                        $(`#row${languageID} td:eq(1)`).html(`${reading}`);
+                        $(`#row${languageID} td:eq(2)`).html(`${writing}`);
+                        $(`#row${languageID} td:eq(3)`).html(`${speaking}`);
+                    }
+                    else
+                        $("#foreignLanguagesTable tr:last").after(innerHTML);
+                },
+                error: function (err) {
+                    alert("AddForeignLanguageToSession error");
+                    console.log(err);
+                }
+            });
+        });
+
+    </script>
+}
