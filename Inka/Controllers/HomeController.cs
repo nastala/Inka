@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -46,14 +47,43 @@ namespace Inka.Controllers
             ViewBag.LicenceID = new SelectList(db.Licences, "ID", "Name");
             ViewBag.EducationLevelID = new SelectList(db.EducationLevels, "ID", "Name");
             ViewBag.ForeignLanguagesID = new SelectList(db.ForeignLanguages, "ID", "Name");
-            ViewBag.Heights = new SelectList(heights);
-            ViewBag.Weights = new SelectList(weights);
-            ViewBag.Sizes = new SelectList(sizes);
-            ViewBag.ShoeSizes = new SelectList(shoeSizes);
+            ViewBag.Heights = heights;
+            ViewBag.Weights = weights;
+            ViewBag.Sizes = sizes;
+            ViewBag.ShoeSizes = shoeSizes;
             ViewBag.LanguageLevels = new SelectList(languageLevels);
             ViewBag.ForeignLanguages = db.ForeignLanguages.ToList();
 
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Basvuru([Bind(Exclude = "PhotoPath")] User user, HttpPostedFileBase file)
+        {
+            if (ModelState.IsValid)
+            {
+                var allowedExtensions = new[] { ".Jpg", ".png", ".jpg", "jpeg" };
+                //var url = file.ToString();
+                var fileName = Path.GetFileName(file.FileName); 
+                var ext = Path.GetExtension(file.FileName); 
+
+                if (allowedExtensions.Contains(ext))
+                {
+                    string name = Path.GetFileNameWithoutExtension(fileName);
+                    string myfileName = name + "_" + DateTime.Now.Ticks + ext;
+                    var path = Path.Combine(Server.MapPath("~/Images"), myfileName);
+
+                    user.PhotoPath = path;
+                    if (Session["UserForeignLanguages"] != null)
+                        user.UserForeignLanguages = Session["UserForeignLanguages"] as List<UserForeignLanguage>;
+
+                    file.SaveAs(path);
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("Basvuru", "Home");
         }
 
         [HttpPost]
