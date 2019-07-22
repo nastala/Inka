@@ -18,7 +18,6 @@ namespace Inka.Models
         public virtual DbSet<ForeignLanguage> ForeignLanguages { get; set; }
         public virtual DbSet<Licence> Licences { get; set; }
         public virtual DbSet<Nation> Nations { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<University> Universities { get; set; }
         public virtual DbSet<UniversityDepartment> UniversityDepartments { get; set; }
         public virtual DbSet<UserForeignLanguage> UserForeignLanguages { get; set; }
