@@ -107,8 +107,24 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EducationLevelID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("EducationLevelID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("EducationLevelID", null, htmlAttributes: new { @class = "form-control", @onchange = "checkEducation()", @id = "sEducationLevel" })
                 @Html.ValidationMessageFor(model => model.EducationLevel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UniversityID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" id="sUniversities" disabled onchange="bringDepartments()"></select>
+                @Html.ValidationMessageFor(model => model.UniversityID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UniversityDepartmentID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" id="sUniversityDepartments" disabled></select>
+                @Html.ValidationMessageFor(model => model.UniversityDepartmentID, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -286,7 +302,7 @@
         $("#btnForeignLanguage").click(function () {
             console.log("btnForeignLanguage");
             getLanguages();
-        })
+        });
 
         $("#btnAddForeignLanguage").click(function () {
             console.log("btnAddForeignLanguage clicked");
@@ -326,5 +342,73 @@
             });
         });
 
+        function checkEducation() {
+            console.log("CheckEducation", $("#sEducationLevel").val());
+            let level = parseInt($("#sEducationLevel").val());
+
+            if (level >= 4) {
+                bringUniversities();
+            }
+            else {
+                $("#sUniversities").prop("disabled", true);
+                $("#sUniversityDepartments").prop("disabled", true);
+            }
+        }
+
+        function bringUniversities() {
+            console.log("bringUniversities");
+            const university = $("#sUniversities").val();
+            const department = $("#sUniversityDepartments").val();
+            if (university != null) {
+                $("#sUniversities").prop("disabled", false);
+                if (department != null) {
+                     $("#sUniversityDepartments").prop("disabled", false);
+                }
+                return;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Universities", "Home")",
+                success: function (response) {
+                    console.log("ajax request success", response);
+                    
+                    $("#sUniversities").append(`<option value="" selected>Üniversite Seçiniz</option>`);
+                    for (let i = 0; i < response.length; i++) {
+                        const data = response[i];
+                        $("#sUniversities").append(`<option value="${data.ID}">${data.Name}</option>`);
+                    }
+
+                    $("#sUniversities").prop("disabled", false);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+
+        function bringDepartments() {
+            console.log("bringDepartments");
+            const universityID = parseInt($("#sUniversities").val());
+            $("#sUniversityDepartments").find('option').remove();
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("UniversityDepartments", "Home")",
+                data: { universityID: universityID },
+                success: function (response) {
+                    console.log("ajax request success", response);
+                    for (let i = 0; i < response.length; i++) {
+                        const data = response[i];
+                        $("#sUniversityDepartments").append(`<option value="${data.ID}">${data.Name}</option>`);
+                    }
+
+                    $("#sUniversityDepartments").prop("disabled", false);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
     </script>
 }

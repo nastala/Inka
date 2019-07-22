@@ -152,5 +152,24 @@ namespace Inka.Controllers
 
             return Json(foreignLanguages.Select(fl => new { fl.ID, fl.Name }), JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public JsonResult Universities()
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+            List<University> universities = db.Universities.Where(university => university.NationID == 1).ToList();
+            return Json(universities, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult UniversityDepartments(int? universityID = null)
+        {
+            if (universityID == null)
+                return null;
+
+            db.Configuration.ProxyCreationEnabled = false;
+            List<UniversityDepartment> universityDepartments = db.UniversityDepartments.Where(universityDepartment => universityDepartment.UniversityID == universityID).ToList();
+            return Json(universityDepartments, JsonRequestBehavior.AllowGet);
+        }
     }
 }
