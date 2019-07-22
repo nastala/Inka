@@ -21,38 +21,41 @@
 
         public int ID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Kimlik No boş bırakılamaz")]
         [StringLength(11)]
         [Display(Name = "Kimlik No")]
         public string IdentityNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Ad boş bırakılamaz")]
         [StringLength(100)]
         [Display(Name = "Ad")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Soyad boş bırakılamaz")]
         [StringLength(50)]
         [Display(Name = "Soyad")]
         public string LastName { get; set; }
 
+        [Required(ErrorMessage = "Doğum Tarihi boş bırakılamaz")]
         [Column(TypeName = "date")]
         [Display(Name = "Doğum Tarihi")]
         public DateTime BirthDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Cinsiyet boş bırakılamaz")]
         [StringLength(10)]
         [Display(Name = "Cinsiyet")]
         public string Gender { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Telefon No boş bırakılamaz")]
         [StringLength(10)]
         [Display(Name = "Telefon No")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Geçersiz telefon numarası")]
         public string TelephoneNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "E-posta boş bırakılamaz")]
         [StringLength(100)]
         [Display(Name = "E-posta")]
+        [EmailAddress(ErrorMessage = "Geçersiz e-posta adresi")]
         public string Email { get; set; }
 
         [Display(Name = "Boy(cm)")]

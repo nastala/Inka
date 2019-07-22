@@ -60,12 +60,18 @@ namespace Inka.Controllers
         [HttpPost]
         public ActionResult Basvuru([Bind(Exclude = "PhotoPath")] User user, HttpPostedFileBase file)
         {
-            if (ModelState.IsValid)
+            bool latterCheck = true;
+            bool photoCheck = true;
+            bool universityCheck = true;
+            bool universityDepartmentCheck = true;
+            bool identityNumberLengthCheck = true;
+            bool identityNumberNumericCheck = true;
+
+            if (file != null)
             {
                 var allowedExtensions = new[] { ".Jpg", ".png", ".jpg", "jpeg" };
-                //var url = file.ToString();
-                var fileName = Path.GetFileName(file.FileName); 
-                var ext = Path.GetExtension(file.FileName); 
+                var fileName = Path.GetFileName(file.FileName);
+                var ext = Path.GetExtension(file.FileName);
 
                 if (allowedExtensions.Contains(ext))
                 {
@@ -78,12 +84,94 @@ namespace Inka.Controllers
                         user.UserForeignLanguages = Session["UserForeignLanguages"] as List<UserForeignLanguage>;
 
                     file.SaveAs(path);
-                    db.Users.Add(user);
-                    db.SaveChanges();
+                }
+                else
+                {
+                    latterCheck = false;
+                    photoCheck = false;
                 }
             }
 
-            return RedirectToAction("Basvuru", "Home");
+            if (user.EducationLevelID >= 4)
+            {
+                if (user.UniversityID == null)
+                {
+                    latterCheck = false;
+                    universityCheck = false;
+                }
+
+                if (user.UniversityDepartmentID == null)
+                {
+                    latterCheck = false;
+                    universityDepartmentCheck = false;
+                }
+            }
+            else
+            {
+                user.UniversityID = null;
+                user.UniversityDepartmentID = null;
+            }
+
+            if (user.IdentityNumber != null)
+            {
+                if (user.IdentityNumber.Length != 11)
+                {
+                    identityNumberLengthCheck = false;
+                    latterCheck = false;
+                }
+                else if (!IsNumeric(user.IdentityNumber))
+                {
+                    identityNumberNumericCheck = false;
+                    latterCheck = false;
+                }
+            }
+
+            if (ModelState.IsValid && latterCheck)
+            {
+                if (latterCheck)
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                    return RedirectToAction("Basvuru", "Home");
+                }
+            }
+
+            Session["UserForeignLanguages"] = null;
+
+            int[] heights = { 150, 151, 152 };
+            int[] weights = { 40, 41, 42 };
+            int[] sizes = { 32, 33, 34 };
+            int[] shoeSizes = { 34, 35, 36 };
+            string[] languageLevels = { "Kötü", "Orta", "İyi", "Çok İyi" };
+
+            ViewBag.NationID = new SelectList(db.Nations, "ID", "Name");
+            ViewBag.CityID = new SelectList(db.Cities.Where(city => city.NationID == 1), "ID", "Name");
+            ViewBag.DistrictID = new SelectList(db.Districts.Where(district => district.CityID == 1), "ID", "Name");
+            ViewBag.LicenceID = new SelectList(db.Licences, "ID", "Name");
+            ViewBag.EducationLevelID = new SelectList(db.EducationLevels, "ID", "Name");
+            ViewBag.ForeignLanguagesID = new SelectList(db.ForeignLanguages, "ID", "Name");
+            ViewBag.Heights = heights;
+            ViewBag.Weights = weights;
+            ViewBag.Sizes = sizes;
+            ViewBag.ShoeSizes = shoeSizes;
+            ViewBag.LanguageLevels = new SelectList(languageLevels);
+            ViewBag.ForeignLanguages = db.ForeignLanguages.ToList();
+
+            if (!photoCheck)
+                ViewBag.PhotoErrorMessage = "Geçersiz fotoğraf seçtiniz";
+
+            if (!universityCheck)
+                ViewBag.UniversityErrorMessage = "Üniversite boş geçilemez";
+
+            if (!universityDepartmentCheck)
+                ViewBag.UniversityDepartmentErrorMessage = "Bölüm boş geçilemez";
+
+            if (!identityNumberLengthCheck)
+                ViewBag.IdentityNumberLengthErrorMessage = "Kimlik numarası 11 hane olmalıdır";
+            else if (!identityNumberNumericCheck)
+                ViewBag.IdentityNumberNumericErrorMessage = "Kimlik numarası sayılardan oluşmalıdır";
+
+            return View();
         }
 
         [HttpPost]
@@ -170,6 +258,21 @@ namespace Inka.Controllers
             db.Configuration.ProxyCreationEnabled = false;
             List<UniversityDepartment> universityDepartments = db.UniversityDepartments.Where(universityDepartment => universityDepartment.UniversityID == universityID).ToList();
             return Json(universityDepartments, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult Districts(int? cityID)
+        {
+            if (cityID == null)
+                return null;
+
+            db.Configuration.ProxyCreationEnabled = false;
+            List<District> districts = db.Districts.Where(district => district.CityID == cityID).ToList();
+            return Json(districts, JsonRequestBehavior.AllowGet);
+        }
+
+        public bool IsNumeric(string value)
+        {
+            return value.All(char.IsNumber);
         }
     }
 }

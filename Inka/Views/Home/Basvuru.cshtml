@@ -21,8 +21,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.IdentityNumber, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.IdentityNumber, new { htmlAttributes = new { @maxlength = "11", @type = "number", @class = "form-control", @onkeydown = "test()" } })
+                @Html.EditorFor(model => model.IdentityNumber, new { htmlAttributes = new { @maxlength = "11", @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.IdentityNumber, "", new { @class = "text-danger" })
+                @if (ViewBag.IdentityNumberLengthErrorMessage != null)
+                {
+                    <label class="text-danger">@ViewBag.IdentityNumberLengthErrorMessage</label>
+                }
+                @if (ViewBag.IdentityNumberNumericErrorMessage != null)
+                {
+                    <label class="text-danger">@ViewBag.IdentityNumberNumericErrorMessage</label>
+                }
             </div>
         </div>
 
@@ -83,7 +91,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CityID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("CityID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("CityID", null, htmlAttributes: new { @id="sCities", @class = "form-control", @onchange = "bringDistricts()" })
                 @Html.ValidationMessageFor(model => model.CityID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -91,7 +99,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DistrictID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("DistrictID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("DistrictID", null, htmlAttributes: new { @id="sDistricts", @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -107,7 +115,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EducationLevelID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("EducationLevelID", null, htmlAttributes: new { @class = "form-control", @onchange = "checkEducation()", @id = "sEducationLevel" })
+                @Html.DropDownList("EducationLevelID", null, htmlAttributes: new {  @id = "sEducationLevel", @class = "form-control", @onchange = "checkEducation()" })
                 @Html.ValidationMessageFor(model => model.EducationLevel, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -115,16 +123,22 @@
         <div class="form-group">
             @Html.LabelFor(model => model.UniversityID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <select class="form-control" id="sUniversities" disabled onchange="bringDepartments()"></select>
-                @Html.ValidationMessageFor(model => model.UniversityID, "", new { @class = "text-danger" })
+                <select class="form-control" id="sUniversities" disabled onchange="bringDepartments()" name="UniversityID"></select>
+                @if (ViewBag.UniversityErrorMessage != null)
+                {
+                    <label class="text-danger">@ViewBag.UniversityErrorMessage</label>
+                }
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.UniversityDepartmentID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <select class="form-control" id="sUniversityDepartments" disabled></select>
-                @Html.ValidationMessageFor(model => model.UniversityDepartmentID, "", new { @class = "text-danger" })
+                <select class="form-control" id="sUniversityDepartments" disabled name="UniversityDepartmentID"></select>
+                @if (ViewBag.UniversityDepartmentErrorMessage != null)
+                {
+                    <label class="text-danger">@ViewBag.UniversityDepartmentErrorMessage</label>
+                }
             </div>
         </div>
 
@@ -197,6 +211,10 @@
         <div class="form-group">
             <div class="col-md-10">
                 <input class="btn btn-danger" type="file" title="image" id="file" name="file" />
+                @if (ViewBag.PhotoErrorMessage != null)
+                {
+                    <label class="text-danger">@ViewBag.PhotoErrorMessage</label> 
+                }
             </div>
         </div>
 
@@ -404,6 +422,28 @@
                     }
 
                     $("#sUniversityDepartments").prop("disabled", false);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+
+        function bringDistricts() {
+            console.log("bringDistricts");
+            const cityID = parseInt($("#sCities").val());
+            $("#sDistricts").find('option').remove();
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Districts", "Home")",
+                data: { cityID: cityID },
+                success: function (response) {
+                    console.log("ajax request success", response);
+                    for (let i = 0; i < response.length; i++) {
+                        const data = response[i];
+                        $("#sDistricts").append(`<option value="${data.ID}">${data.Name}</option>`);
+                    }
                 },
                 error: function (err) {
                     console.log(err);
